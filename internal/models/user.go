@@ -7,6 +7,7 @@ const (
 	MALE   Gender = "Мужчина"
 )
 
+// Псевдоним для интересов пользователя
 type Interests string
 
 const (
@@ -44,6 +45,7 @@ const (
 	InterestBaking       Interests = "Выпечка"
 )
 
+// Псевдоним для статуса отношений
 type Status string
 
 const (
@@ -56,11 +58,11 @@ const (
 
 type User struct {
 	ID           int         `json:"id"`
-	Name         string      `json:"name"`
-	Email        string      `json:"email"`
-	Password     []byte      `json:"password"`
-	Age          uint8       `json:"age"`
-	Gender       Gender      `json:"gender"`
+	Name         string      `json:"name" binding:"required"`
+	Email        string      `json:"email" binding:"required"`
+	Password     string      `json:"password" binding:"required"`
+	Age          uint8       `json:"age" binding:"required"`
+	Gender       Gender      `json:"gender" binding:"required"`
 	Interests    []Interests `json:"interests"`
 	Status       Status      `json:"status"`
 	Bio          string      `json:"bio"`
@@ -71,25 +73,39 @@ type User struct {
 	YourPartners []int       `json:"your_partners"`
 }
 
-type UserDTO struct {
+// Модель которая будет попадаться в ленте
+type UserResponse struct {
+	Name      string       `json:"name"`
+	Age       uint8        `json:"age"`
+	Gender    Gender       `json:"gender"`
+	Interests *[]Interests `json:"interests"`
+	Status    *string      `json:"status"`
+	Bio       *string      `json:"bio"`
+	Country   *string      `json:"country"`
+	City      *string      `json:"city"`
+	Photos    *[]string    `json:"photos"`
+}
+
+type UserResponseForDB struct {
+	Name      string       `json:"name"`
+	Age       uint8        `json:"age"`
+	Gender    Gender       `json:"gender"`
+	Interests *[]Interests `json:"interests"`
+	Status    *string      `json:"status"`
+	Bio       *string      `json:"bio"`
+	Country   *string      `json:"country"`
+	City      *string      `json:"city"`
+	Photos    []uint8      `json:"photos"`
+}
+
+type UserRequestForUpdate struct {
+	ID        int         `json:"id"`
 	Name      string      `json:"name"`
 	Age       uint8       `json:"age"`
 	Gender    Gender      `json:"gender"`
 	Interests []Interests `json:"interests"`
 	Status    Status      `json:"status"`
 	Bio       string      `json:"bio"`
+	Country   string      `json:"country"`
 	City      string      `json:"city"`
-}
-
-type UserPhoto struct {
-	ID       int    `json:"id"`
-	UserID   int    `json:"user_id"`
-	Photo    []byte `json:"photo"`
-	IsAvatar bool   `json:"is_avatar"`
-}
-
-type User_req struct {
-	Name     string
-	Email    string
-	Password []byte
 }
